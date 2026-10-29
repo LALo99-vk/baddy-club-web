@@ -130,9 +130,9 @@ function EventPage() {
       <Link to="/" hash="events" className="back-link"><ArrowLeft size={16} /> All events</Link>
       <p className="eyebrow">Event {info.shortLabel}</p>
       <h1>{info.label}<span>.</span></h1>
-      <p className="t-prize">Prize <strong>{info.prize}</strong></p>
+      <div className="t-meta"><p className="t-prize">Prize <strong>{info.prize}</strong></p><RefreshButton fetchedAt={fetchedAt} /></div>
     </section>
-    <div className="tabs-bar"><div className="tabs section-shell" role="tablist" aria-label="Event sections">{TABS.map((item) => <button className={tab === item ? 'tab-active' : ''} key={item} onClick={() => setTab(item)} role="tab" aria-selected={tab === item}>{item}</button>)}<RefreshButton fetchedAt={fetchedAt} className="ml-auto pl-4" /></div></div>
+    <div className="tabs-bar"><div className="tabs section-shell" role="tablist" aria-label="Event sections">{TABS.map((item) => <button className={tab === item ? 'tab-active' : ''} key={item} onClick={() => setTab(item)} role="tab" aria-selected={tab === item}>{item}</button>)}</div></div>
     <section className="t-content section-shell">
       {tab === 'Pools' && <PoolsView pools={data.pools} isDoubles={info.kind === 'doubles'} />}
       {tab === 'Knockouts' && <KnockoutView event={data} info={info} />}

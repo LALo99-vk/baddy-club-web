@@ -91,7 +91,8 @@
 .back-link:hover { color: var(--pink-deep); }
 .t-intro h1 { font-size: clamp(36px, 10vw, 64px); line-height: .9; letter-spacing: -.07em; margin: 0; font-weight: 700; }
 .t-intro h1 span { color: var(--pink); }
-.t-prize { margin: 10px 0 0; font: 11px 'DM Mono'; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.t-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin-top: 12px; }
+.t-prize { margin: 0; font: 11px 'DM Mono'; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
 .t-prize strong { color: var(--ink); font-family: 'Space Grotesk'; font-size: 14px; text-transform: none; letter-spacing: -.02em; margin-left: 6px; }
 .t-content { padding-top: 24px; padding-bottom: 56px; }
 .t-more { padding-top: 32px; padding-bottom: 56px; border-top: 1px solid var(--line); }
