@@ -21,3 +21,12 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# TanStack Start / nitro output
+.output
+.vinxi
+.tanstack
+.env*
+!.env.example
+.wrangler
+.vercel
