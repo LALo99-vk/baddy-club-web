@@ -56,7 +56,6 @@
 .hero h1 em { color: var(--pink); }
 .hero-subtitle { font-size: 18px; line-height: 1.1; letter-spacing: -.04em; margin: 22px 0 24px; }
 .hero-subtitle strong { color: var(--pink-deep); font-weight: 600; }
-.hero-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
 
 /* Shared section bits */
 .section-shell { max-width: 1240px; margin: 0 auto; padding-left: 20px; padding-right: 20px; }
@@ -189,7 +188,6 @@ footer span { display: block; margin-top: 10px; color: #94948f; font-size: 9px; 
   .hero h1 { font-size: clamp(56px, 7vw, 112px); }
   .hero-subtitle { font-size: 22px; margin: 34px 0 29px; }
 
-  .hero-actions { flex-direction: row; }
 
   .section-shell { padding-left: 5vw; padding-right: 5vw; }
   .eyebrow { margin-bottom: 17px; }
