@@ -185,6 +185,8 @@ const ROUND_ALIASES: { canonical: string; order: number; keys: string[] }[] = [
   { canonical: "Round 3", order: 3, keys: ["round3", "r3", "roundthree"] },
   { canonical: "Round 4", order: 4, keys: ["round4", "r4", "roundfour"] },
   { canonical: "Round 5", order: 5, keys: ["round5", "r5", "roundfive"] },
+  // Baddy: Men's Doubles sends 26 teams through, so its knockout opens with a Round of 32.
+  { canonical: "Round of 32", order: 5.25, keys: ["roundof32", "r32", "last32"] },
   // Baddy: a 16-team knockout after the pools is called the Round of 16.
   {
     canonical: "Round of 16",

@@ -138,15 +138,21 @@
 
 
 /* Winners */
-.podium { display: grid; grid-template-columns: 1fr; gap: 12px; }
-.podium-place { display: flex; align-items: center; gap: 16px; padding: 20px 18px; background: #fff; border: 1px solid var(--line); }
-.podium-first { border-color: var(--ink); }
-.winner-mark { width: 52px; height: 52px; flex-shrink: 0; border-radius: 50%; border: 1px solid var(--ink); display: grid; place-items: center; }
-.podium-first .winner-mark { background: var(--pink); border-color: var(--pink); }
-.podium-place span { color: var(--muted); font: 10px 'DM Mono'; text-transform: uppercase; letter-spacing: .05em; }
-.podium-first span { color: var(--pink-deep); }
-.podium-place h3 { margin: 6px 0 0; font-size: 20px; letter-spacing: -.05em; line-height: 1.15; }
 .podium-note { margin: 14px 0 0; color: var(--muted); font-size: 13px; }
+/* Champion plaque: ink card with an inset gold rule, names in gold, one slow sheen. */
+.champion-card { --gold: #d6b25e; position: relative; overflow: hidden; padding: 36px 22px 28px; background: radial-gradient(120% 80% at 50% 0%, #2b2417 0%, var(--ink) 62%); color: #f6efe0; text-align: center; }
+.champion-card::before { content: ""; position: absolute; inset: 8px; border: 1px solid rgba(214, 178, 94, .45); pointer-events: none; }
+.champion-card:not(.is-pending)::after { content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, transparent, rgba(255, 236, 180, .1), transparent); transform: skewX(-14deg); animation: champion-sheen 7s ease-in-out 1s infinite; pointer-events: none; }
+@keyframes champion-sheen { 0% { left: -60%; } 35%, 100% { left: 130%; } }
+.champion-trophy { width: 64px; height: 64px; margin: 0 auto 18px; border-radius: 50%; display: grid; place-items: center; color: var(--ink); background: linear-gradient(145deg, #f4e2a8, #c9a24b 55%, #8c6b22); box-shadow: 0 0 0 6px rgba(214, 178, 94, .12), 0 12px 30px rgba(201, 162, 75, .22); }
+.champion-label { margin: 0; font: 500 10px 'DM Mono', monospace; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+.champion-name { margin: 14px 0 0; font-size: 28px; font-weight: 700; line-height: 1.1; letter-spacing: -.04em; }
+.champion-player { display: block; background: linear-gradient(180deg, #fff6dc, #e2c071); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.champion-amp { display: block; margin: 4px 0; font-size: 15px; font-weight: 400; color: var(--gold); }
+.champion-rule { width: 56px; height: 1px; margin: 20px auto 14px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.champion-foot { margin: 0; font: 10px 'DM Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: rgba(246, 239, 224, .6); }
+.champion-card.is-pending .champion-trophy { background: transparent; color: var(--gold); border: 1px dashed rgba(214, 178, 94, .6); box-shadow: none; }
+.champion-card.is-pending .champion-name { color: rgba(246, 239, 224, .75); font-size: 24px; }
 
 /* Gallery */
 .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
@@ -225,10 +231,8 @@ footer span { display: block; margin-top: 10px; color: #94948f; font-size: 9px; 
 
 
 
-  .podium { max-width: 560px; }
-  .podium-place { padding: 28px 24px; gap: 20px; }
-  .winner-mark { width: 60px; height: 60px; }
-  .podium-place h3 { font-size: 24px; }
+  .champion-card { max-width: 560px; padding: 46px 40px 34px; }
+  .champion-name { font-size: 34px; }
   .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
 
 
@@ -253,4 +257,4 @@ footer span { display: block; margin-top: 10px; color: #94948f; font-size: 9px; 
 @keyframes present-out { from { opacity: 1; } to { opacity: 0; } }
 @utility present-in { animation: present-in .22s cubic-bezier(.22, 1, .36, 1) both; }
 @utility present-out { animation: present-out .2s ease-in both; pointer-events: none; }
-@media (prefers-reduced-motion: reduce) { .connector-flow, .live-dot, .card-in, .present-in, .present-out { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .champion-card::after { display: none; } .connector-flow, .live-dot, .card-in, .present-in, .present-out { animation: none; } }

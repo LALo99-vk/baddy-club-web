@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { ArrowLeft, ArrowUpRight, Camera, ChevronDown, Trophy, X } from 'lucide-react';
 import { EVENTS, QUALIFIERS_PER_POOL, eventInfo, isEventKey, type EventInfo } from '@/data/event';
 import type { EventData, GalleryPhoto, PoolSummary } from '@/data/tournament';
@@ -22,7 +22,27 @@ export const Route = createFileRoute('/tournaments/$slug')({
     return { meta: [{ title: `${label} | The Baddy Club × District Play Open` }, { name: 'description', content: `${label} pools, knockout draw and champion at The Baddy Club × District Play Open.` }] };
   },
   component: TournamentPage,
+  // The router's default is to sit on the old page for a full second before
+  // showing anything, which on a slow phone reads as the home page freezing.
+  // The event's name and prize are known without the sheet, so show those at once.
+  pendingMs: 100,
+  pendingMinMs: 200,
+  pendingComponent: EventPending,
 });
+
+function EventPending() {
+  const info = eventInfo(Route.useParams().slug);
+  if (!info) return null;
+  return <>
+    <section className="t-intro section-shell">
+      <Link to="/" hash="events" className="back-link"><ArrowLeft size={16} /> All events</Link>
+      <p className="eyebrow">Event {info.shortLabel}</p>
+      <h1>{info.label}<span>.</span></h1>
+      <div className="t-meta"><p className="t-prize">Prize <strong>{info.prize}</strong></p></div>
+    </section>
+    <section className="t-content section-shell"><div className="empty-state">Loading the draw…</div></section>
+  </>;
+}
 
 const TABS = ['Pools', 'Knockouts', 'Winners', 'Gallery'] as const;
 type Tab = (typeof TABS)[number];
@@ -77,13 +97,19 @@ function KnockoutView({ event, info }: { event: EventData; info: EventInfo }) {
   return <Bracket rounds={event.rounds} kind={info.kind} courtLabel={event.courtLabel} title={info.label} />;
 }
 
-function WinnersView({ champion }: { champion: string | null }) {
+// One plaque per event: ink, gold trim, the names engraved. Doubles partners each get a line.
+function WinnersView({ champion, info }: { champion: string | null; info: EventInfo }) {
+  const players = champion ? champion.split(' & ') : [];
   return <>
-    <div className="podium"><div className="podium-place podium-first">
-      <div className="winner-mark"><Trophy size={26} strokeWidth={1.6} /></div>
-      <div><span>Champion</span><h3>{champion ?? 'To be decided'}</h3></div>
-    </div></div>
-    {!champion && <p className="podium-note">Decided at the final. Results appear here as soon as it is played.</p>}
+    <div className={`champion-card ${champion ? '' : 'is-pending'}`}>
+      <div className="champion-trophy"><Trophy size={28} strokeWidth={1.6} /></div>
+      <p className="champion-label">{champion ? `${info.label} champion${players.length > 1 ? 's' : ''}` : `${info.label} · Champion`}</p>
+      <h3 className="champion-name">{players.length
+        ? players.map((player, i) => <Fragment key={player}>{i > 0 && <span className="champion-amp">&amp;</span>}<span className="champion-player">{player}</span></Fragment>)
+        : 'To be decided'}</h3>
+      {!champion && <><div className="champion-rule" /><p className="champion-foot">Decided at the final</p></>}
+    </div>
+    {!champion && <p className="podium-note">Results appear here as soon as the final is played.</p>}
   </>;
 }
 
@@ -136,7 +162,7 @@ function EventPage() {
     <section className="t-content section-shell">
       {tab === 'Pools' && <PoolsView pools={data.pools} isDoubles={info.kind === 'doubles'} />}
       {tab === 'Knockouts' && <KnockoutView event={data} info={info} />}
-      {tab === 'Winners' && <WinnersView champion={data.champion} />}
+      {tab === 'Winners' && <WinnersView champion={data.champion} info={info} />}
       {tab === 'Gallery' && <GalleryView photos={data.gallery} />}
     </section>
     <section className="t-more section-shell"><p className="eyebrow">Other events</p><div className="t-more-links">{EVENTS.filter((e) => e.slug !== slug).map((e) => <Link key={e.slug} to="/tournaments/$slug" params={{ slug: e.slug }}>{e.label} <ArrowUpRight size={16} /></Link>)}</div></section>

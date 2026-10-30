@@ -11,7 +11,7 @@
  *     Without it, each event reads the tab named after its short label (MS, MD, XD, WD).
  *   One tab per event — Match No, Round, Team 1, Team 2, Score 1, Score 2, Court, Time,
  *     Winner, Status. Round is "Pool A", "Pool B", … for the round robin, then
- *     Round of 16 / Quarter-Finals / Semi-Finals / Final.
+ *     Round of 32 / Round of 16 / Quarter-Finals / Semi-Finals / Final.
  */
 import { EVENTS, type EventKey } from "@/data/event";
 import type { EventData } from "@/data/tournament";
