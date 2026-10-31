@@ -85,7 +85,7 @@ function PoolsView({ pools, isDoubles }: { pools: PoolSummary[]; isDoubles: bool
       const qualifiers = standings.filter((row) => row.qualified);
       return <section key={pool} id={`pool-${pool}`} className="pool-group">
         <div className="pool-group-head"><span className="pool-name">Pool {pool}</span><small>{complete ? 'Complete' : `${played} of ${total} played`}</small><button type="button" className="pool-toggle" aria-expanded={open} onClick={() => toggle(pool)}>Points <ChevronDown size={14} /></button></div>
-        {qualifiers.length > 0 && <p className="pool-qualifiers">Through: {qualifiers.map((row, i) => <span key={row.team}><b>{pool}{i + 1}</b> {row.team}</span>)}</p>}
+        {qualifiers.length > 0 && !open && <p className="pool-qualifiers"><small>Through</small>{qualifiers.map((row, i) => <span key={row.team}><b>{pool}{i + 1}</b> {row.team}</span>)}</p>}
         {open && <PoolStandings summary={summary} isDoubles={isDoubles} />}
         <PoolMatches summary={summary} />
       </section>;
