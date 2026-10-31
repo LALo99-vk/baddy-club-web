@@ -59,13 +59,13 @@ function PoolMatches({ summary }: { summary: PoolSummary }) {
 function PoolStandings({ summary, isDoubles }: { summary: PoolSummary; isDoubles: boolean }) {
   const { pool, standings } = summary;
   return <table className="standings">
-    <thead><tr><th scope="col">#</th><th scope="col" className="standings-team">{isDoubles ? 'Team' : 'Player'}</th><th scope="col">P</th><th scope="col">W</th><th scope="col">L</th><th scope="col">+/−</th></tr></thead>
+    <thead><tr><th scope="col">#</th><th scope="col" className="standings-team">{isDoubles ? 'Team' : 'Player'}</th><th scope="col">P</th><th scope="col">W</th><th scope="col">L</th><th scope="col">Point Diff</th><th scope="col">Points Scored</th></tr></thead>
     <tbody>{standings.map((row, index) => {
       const diff = row.pointsFor - row.pointsAgainst;
       return <tr key={row.team} className={row.qualified ? 'qualified' : ''}>
         <td className="standings-rank">{row.qualified ? `${pool}${index + 1}` : index + 1}</td>
         <td className="standings-team">{row.team}{row.qualified && <span className="q-badge">Q</span>}</td>
-        <td>{row.played}</td><td>{row.won}</td><td>{row.lost}</td><td>{row.played ? (diff > 0 ? `+${diff}` : diff) : '–'}</td>
+        <td>{row.played}</td><td>{row.won}</td><td>{row.lost}</td><td>{row.played ? (diff > 0 ? `+${diff}` : diff) : '–'}</td><td>{row.played ? row.pointsFor : '–'}</td>
       </tr>;
     })}</tbody>
   </table>;
