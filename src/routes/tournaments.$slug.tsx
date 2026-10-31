@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router';
 import { Fragment, useEffect, useState } from 'react';
-import { ArrowLeft, ArrowUpRight, Camera, ChevronDown, Trophy, X } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Camera, ChevronDown, Search, Trophy, X } from 'lucide-react';
 import { EVENTS, QUALIFIERS_PER_POOL, eventInfo, isEventKey, type EventInfo } from '@/data/event';
 import type { EventData, GalleryPhoto, PoolSummary } from '@/data/tournament';
 import { getEventPage } from '@/lib/tournament-data';
@@ -47,16 +47,23 @@ function EventPending() {
 const TABS = ['Pools', 'Knockouts', 'Winners', 'Gallery'] as const;
 type Tab = (typeof TABS)[number];
 
-function PoolMatches({ summary }: { summary: PoolSummary }) {
+// Softly marks the part of a name that matches the pool search.
+function Hit({ text, q }: { text: string; q: string }) {
+  const at = q ? text.toLowerCase().indexOf(q) : -1;
+  if (at < 0) return <>{text}</>;
+  return <>{text.slice(0, at)}<mark className="name-hit">{text.slice(at, at + q.length)}</mark>{text.slice(at + q.length)}</>;
+}
+
+function PoolMatches({ summary, q }: { summary: PoolSummary; q: string }) {
   return <div className="pool-matches">{summary.matches.map((m) => <div className={`pool-match ${m.status === 'live' ? 'pool-match-live' : ''}`} key={m.matchNumber}>
     <div className="pool-match-teams">
-      {([['a', m.teamA, m.scoreA], ['b', m.teamB, m.scoreB]] as const).map(([side, name, score]) => <div key={side} className={`pool-match-row ${m.winner ? (m.winner === side ? 'winner' : 'loser') : ''}`}><span>{name}</span><span className="pool-match-score">{score ?? '–'}</span></div>)}
+      {([['a', m.teamA, m.scoreA], ['b', m.teamB, m.scoreB]] as const).map(([side, name, score]) => <div key={side} className={`pool-match-row ${m.winner ? (m.winner === side ? 'winner' : 'loser') : ''}`}><span><Hit text={name} q={q} /></span><span className="pool-match-score">{score ?? '–'}</span></div>)}
     </div>
     <div className="pool-match-meta"><span>{[m.time, m.court].filter(Boolean).join(' · ')}</span><StatusPill status={m.status} /></div>
   </div>)}</div>;
 }
 
-function PoolStandings({ summary, isDoubles }: { summary: PoolSummary; isDoubles: boolean }) {
+function PoolStandings({ summary, isDoubles, q }: { summary: PoolSummary; isDoubles: boolean; q: string }) {
   const { pool, standings } = summary;
   return <table className="standings">
     <thead><tr><th scope="col">#</th><th scope="col" className="standings-team">{isDoubles ? 'Team' : 'Player'}</th><th scope="col">P</th><th scope="col">W</th><th scope="col">L</th><th scope="col">Point Diff</th><th scope="col">Points Scored</th></tr></thead>
@@ -64,7 +71,7 @@ function PoolStandings({ summary, isDoubles }: { summary: PoolSummary; isDoubles
       const diff = row.pointsFor - row.pointsAgainst;
       return <tr key={row.team} className={row.qualified ? 'qualified' : ''}>
         <td className="standings-rank">{row.qualified ? `${pool}${index + 1}` : index + 1}</td>
-        <td className="standings-team">{row.team}{row.qualified && <span className="q-badge">Q</span>}</td>
+        <td className="standings-team"><Hit text={row.team} q={q} />{row.qualified && <span className="q-badge">Q</span>}</td>
         <td>{row.played}</td><td>{row.won}</td><td>{row.lost}</td><td>{row.played ? (diff > 0 ? `+${diff}` : diff) : '–'}</td><td>{row.played ? row.pointsFor : '–'}</td>
       </tr>;
     })}</tbody>
@@ -74,20 +81,26 @@ function PoolStandings({ summary, isDoubles }: { summary: PoolSummary; isDoubles
 // Pools stack as one list rather than cards, so eight pools stay readable. Matches show by default; points open on demand.
 function PoolsView({ pools, isDoubles }: { pools: PoolSummary[]; isDoubles: boolean }) {
   const [openPools, setOpenPools] = useState<Set<string>>(new Set());
+  const [query, setQuery] = useState('');
   if (!pools.length) return <div className="empty-state">The pools appear here once the draw is made.</div>;
+  const q = query.trim().toLowerCase();
+  const has = (team: string) => team.toLowerCase().includes(q);
+  const shown = q ? pools.filter((p) => p.standings.some((row) => has(row.team)) || p.matches.some((m) => has(m.teamA) || has(m.teamB))) : pools;
   const toggle = (pool: string) => setOpenPools((current) => { const next = new Set(current); if (next.has(pool)) next.delete(pool); else next.add(pool); return next; });
   return <>
     <p className="pools-note">Top {QUALIFIERS_PER_POOL} from each pool go through to the knockouts.</p>
-    {pools.length > 3 && <nav className="pool-jump" aria-label="Jump to pool">{pools.map(({ pool }) => <a key={pool} href={`#pool-${pool}`} onClick={(e) => { e.preventDefault(); document.getElementById(`pool-${pool}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}>{pool}</a>)}</nav>}
-    <div className="pool-list">{pools.map((summary) => {
+    <div className="pool-search"><Search size={16} aria-hidden="true" /><input type="search" placeholder="Find your name" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Find your name in the pools" autoComplete="off" enterKeyHint="search" />{query && <button type="button" aria-label="Clear search" onClick={() => setQuery('')}><X size={16} /></button>}</div>
+    {q && !shown.length && <div className="empty-state">No player found for “{query.trim()}”.</div>}
+    {!q && pools.length > 3 && <nav className="pool-jump" aria-label="Jump to pool">{pools.map(({ pool }) => <a key={pool} href={`#pool-${pool}`} onClick={(e) => { e.preventDefault(); document.getElementById(`pool-${pool}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}>{pool}</a>)}</nav>}
+    <div className="pool-list">{shown.map((summary) => {
       const { pool, standings, played, total, complete } = summary;
       const open = openPools.has(pool);
       const qualifiers = standings.filter((row) => row.qualified);
       return <section key={pool} id={`pool-${pool}`} className="pool-group">
         <div className="pool-group-head"><span className="pool-name">Pool {pool}</span><small>{complete ? 'Complete' : `${played} of ${total} played`}</small><button type="button" className="pool-toggle" aria-expanded={open} onClick={() => toggle(pool)}>Points <ChevronDown size={14} /></button></div>
-        {qualifiers.length > 0 && !open && <p className="pool-qualifiers"><small>Through</small>{qualifiers.map((row, i) => <span key={row.team}><b>{pool}{i + 1}</b> {row.team}</span>)}</p>}
-        {open && <PoolStandings summary={summary} isDoubles={isDoubles} />}
-        <PoolMatches summary={summary} />
+        {qualifiers.length > 0 && !open && <p className="pool-qualifiers"><small>Through</small>{qualifiers.map((row, i) => <span key={row.team}><b>{pool}{i + 1}</b> <Hit text={row.team} q={q} /></span>)}</p>}
+        {open && <PoolStandings summary={summary} isDoubles={isDoubles} q={q} />}
+        <PoolMatches summary={summary} q={q} />
       </section>;
     })}</div>
   </>;

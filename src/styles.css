@@ -105,6 +105,14 @@
 
 /* Pools */
 .pools-note { margin: 0 0 16px; font: 11px 'DM Mono'; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.pool-search { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding: 0 12px; background: #fff; border: 1px solid var(--line); color: var(--muted); transition: border-color .2s; }
+.pool-search:focus-within { border-color: var(--ink); }
+.pool-search input { flex: 1; min-width: 0; padding: 12px 0; border: 0; outline: 0; background: none; color: var(--ink); font: 16px 'Space Grotesk', sans-serif; }
+.pool-search input::placeholder { color: var(--muted); }
+.pool-search input::-webkit-search-cancel-button { display: none; }
+.pool-search button { display: inline-flex; padding: 6px; margin-right: -6px; border: 0; background: none; color: var(--muted); cursor: pointer; }
+.pool-search button:hover { color: var(--ink); }
+mark.name-hit { background: #fde3f1; color: inherit; border-radius: 3px; padding: 0 1px; }
 .pool-jump { display: flex; gap: 6px; margin: 0 -20px 16px; padding: 0 20px 2px; overflow-x: auto; scrollbar-width: none; }
 .pool-jump::-webkit-scrollbar { display: none; }
 .pool-jump a { flex: 0 0 auto; min-width: 36px; padding: 8px 0; text-align: center; border: 1px solid var(--line); background: #fff; font: 12px 'DM Mono'; transition: border-color .2s, color .2s; }
