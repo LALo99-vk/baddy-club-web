@@ -34,12 +34,12 @@ function EventPending() {
   const info = eventInfo(Route.useParams().slug);
   if (!info) return null;
   return <>
-    <section className="t-intro section-shell">
+    <div className="t-hero"><section className="t-intro section-shell">
       <Link to="/" hash="events" className="back-link"><ArrowLeft size={16} /> All events</Link>
       <p className="eyebrow">Event {info.shortLabel}</p>
       <h1>{info.label}<span>.</span></h1>
       <div className="t-meta"><p className="t-prize">Prize <strong>{info.prize}</strong></p></div>
-    </section>
+    </section></div>
     <section className="t-content section-shell"><div className="empty-state">Loading the draw…</div></section>
   </>;
 }
@@ -153,12 +153,12 @@ function EventPage() {
   const empty: EventData = { slug: info.slug, pools: [], rounds: [], champion: null, gallery: [] };
   const data = event ?? empty;
   return <>
-    <section className="t-intro section-shell">
+    <div className="t-hero"><section className="t-intro section-shell">
       <Link to="/" hash="events" className="back-link"><ArrowLeft size={16} /> All events</Link>
       <p className="eyebrow">Event {info.shortLabel}</p>
       <h1>{info.label}<span>.</span></h1>
       <div className="t-meta"><p className="t-prize">Prize <strong>{info.prize}</strong></p><RefreshButton fetchedAt={fetchedAt} /></div>
-    </section>
+    </section></div>
     <div className="tabs-bar"><div className="tabs section-shell" role="tablist" aria-label="Event sections">{TABS.map((item) => <button className={tab === item ? 'tab-active' : ''} key={item} onClick={() => setTab(item)} role="tab" aria-selected={tab === item}>{item}</button>)}</div></div>
     <section className="t-content section-shell">
       {tab === 'Pools' && <PoolsView pools={data.pools} isDoubles={info.kind === 'doubles'} />}

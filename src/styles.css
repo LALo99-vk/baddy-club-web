@@ -86,6 +86,9 @@
 .status-completed { color: #4a8a6b; }
 
 /* Tournament page */
+/* Event header: a soft pink wash */
+.t-hero { position: relative; overflow: hidden; background: linear-gradient(180deg, #fdeef6 0%, var(--paper) 100%); }
+.t-hero .t-intro { position: relative; z-index: 1; }
 .t-intro { padding-top: 20px; padding-bottom: 18px; }
 .back-link { display: inline-flex; align-items: center; gap: 8px; font: 11px 'DM Mono'; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 14px; transition: color .2s; }
 .back-link:hover { color: var(--pink-deep); }
@@ -177,7 +180,10 @@
 .empty-state { padding: 22px 0; color: var(--muted); font-size: 13px; }
 
 /* Footer */
-footer { background: var(--ink); color: white; padding: 24px 20px; }
+/* Short pages: the footer sits at the bottom of the screen, not mid-page */
+main { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+main > * { width: 100%; }
+footer { background: var(--ink); color: white; padding: 24px 20px; margin-top: auto; }
 .footer-brand { text-transform: uppercase; letter-spacing: -.04em; }
 .footer-brand strong { color: var(--pink); }
 .footer-tagline { margin: 12px 0 0; font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -.03em; text-transform: none; color: #fff; }
