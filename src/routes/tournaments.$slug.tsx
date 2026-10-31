@@ -49,8 +49,9 @@ type Tab = (typeof TABS)[number];
 
 function PoolMatches({ summary }: { summary: PoolSummary }) {
   return <div className="pool-matches">{summary.matches.map((m) => <div className={`pool-match ${m.status === 'live' ? 'pool-match-live' : ''}`} key={m.matchNumber}>
-    <div className="pool-match-teams"><span className={m.winner === 'a' ? 'winner' : ''}>{m.teamA}</span><span className={m.winner === 'b' ? 'winner' : ''}>{m.teamB}</span></div>
-    <div className="pool-match-score"><span>{m.scoreA ?? '–'}</span><span>{m.scoreB ?? '–'}</span></div>
+    <div className="pool-match-teams">
+      {([['a', m.teamA, m.scoreA], ['b', m.teamB, m.scoreB]] as const).map(([side, name, score]) => <div key={side} className={`pool-match-row ${m.winner ? (m.winner === side ? 'winner' : 'loser') : ''}`}><span>{name}</span><span className="pool-match-score">{score ?? '–'}</span></div>)}
+    </div>
     <div className="pool-match-meta"><span>{[m.time, m.court].filter(Boolean).join(' · ')}</span><StatusPill status={m.status} /></div>
   </div>)}</div>;
 }

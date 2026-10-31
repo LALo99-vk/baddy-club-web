@@ -127,13 +127,15 @@
 .pool-matches { padding: 0 12px; }
 .pool-qualifiers { margin: 0; padding: 10px 12px; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; border-bottom: 1px solid #eee; }
 .pool-qualifiers b { color: var(--pink-deep); font: 11px 'DM Mono'; margin-right: 4px; }
-.pool-match { display: grid; grid-template-columns: 1fr auto; grid-template-areas: 'teams score' 'meta meta'; gap: 6px 12px; padding: 12px 0; border-bottom: 1px solid #eee; font-size: 13px; }
+.pool-match { display: flex; flex-direction: column; gap: 6px; padding: 12px 0; border-bottom: 1px solid #eee; font-size: 13px; }
 .pool-match:last-child { border-bottom: 0; }
 .pool-match-live { box-shadow: inset 3px 0 0 var(--pink); padding-left: 10px; margin-left: -10px; }
-.pool-match-teams { grid-area: teams; display: flex; flex-direction: column; gap: 4px; min-width: 0; overflow-wrap: anywhere; }
-.pool-match-teams .winner { font-weight: 700; }
-.pool-match-score { grid-area: score; display: flex; flex-direction: column; gap: 4px; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
-.pool-match-meta { grid-area: meta; display: flex; justify-content: space-between; align-items: center; font: 10px 'DM Mono'; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.pool-match-teams { display: flex; flex-direction: column; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
+.pool-match-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 8px; margin: 0 -8px; border-radius: 6px; }
+.pool-match-row.winner { background: #eef6ef; font-weight: 700; }
+.pool-match-row.loser { color: var(--muted); }
+.pool-match-score { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.pool-match-meta { display: flex; justify-content: space-between; align-items: center; font: 10px 'DM Mono'; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
 .pool-match-meta .status { grid-area: auto; }
 
 
